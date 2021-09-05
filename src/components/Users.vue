@@ -11,37 +11,55 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="row">
-                    <div class="col-sm-6 cell-margin-bottom" v-for='user in users'>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3 image-cell">
-                                        <img v-bind:src="user.Picture" class="rounded mx-auto d-block" alt="">
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="row">
-                                            <div class="col-md-12 el-margin-bottom el-cell">{{user.name}}</div>
-                                            <div class="col-md-12 el-margin-bottom el-cell">{{user.DOB}}</div>
-                                            <div class="col-md-12 el-margin-bottom el-cell">
-                                                <a :href="`${user.mailto}`">{{user.Email}}</a>
-                                            </div>
-                                            <div class="col-md-12 el-margin-bottom el-cell">{{user.Phone}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 30px;">#</th>
+                            <th scope="col" style="width: 100px;">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">DOB</th>
+                            <th scope="col">Email/Phone</th>
+                            <th scope="col" style="width:30%">Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for='user in users'>
+                            <th scope="row">{{user.sl_no}}</th>
+                            <td>
+                                <img v-bind:src="user.Picture" class="rounded mx-auto d-block" alt="">
+                            </td>
+                            <td>{{user.name}}</td>
+                            <td>{{user.DOB}}</td>
+                            <td>
+                                <UserEmail :email="user.Email">Hello world!</UserEmail>
+                                <br />
+                                {{user.Phone}}
+                            </td>
+                            <td style="text-align:left">
+                                Street: {{user.Location.street_name}}<br />
+                                City: {{user.Location.city}}<br />
+                                State: {{user.Location.state}}<br />
+                                Country: {{user.Location.country}}<br />
+                                Postcode: {{user.Location.postcode}}<br />
+                                latitude: {{user.Location.latitude}}<br />
+                                longitude: {{user.Location.longitude}}<br />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                
             </div>
         </div>
     </div>
 </template>
 <script>
+import UserEmail from './UserEmail.vue'
 export default {
     name: 'Users',
+    components: {
+        UserEmail
+    },
     data(){
         return {
             userApiStatus: {
@@ -55,7 +73,7 @@ export default {
         async getUsers() {
             let api_status = true;
             let api_message = true;'success'
-            const result = await fetch('https://randomuser.me/api/?results=10')
+            const result = await fetch('https://randomuser.me/api/?results=20')
                                 .then(this.handleErrors)
                                 .then(function(response) {
                                     return response
@@ -153,5 +171,8 @@ export default {
     }
     .image-cell {
         padding: 4px;
+    }
+    .user-image {
+        width: 60px;
     }
 </style>
